@@ -112,7 +112,7 @@ Copyright 2009-2018 Acme Coorp"""
         result.task(":darwin-tar:checkNotice").outcome == TaskOutcome.FAILED
         normalized(result.output).contains("> expected line [2] in " +
                 "[./darwin-tar/build/tar-extracted/elasticsearch-${VersionProperties.getElasticsearch()}/NOTICE.txt] " +
-                "to be [Copyright 2009-2018 Elasticsearch] but was [Copyright 2009-2018 Acme Coorp]")
+                "to be [Copyright 2009-2021 Elasticsearch] but was [Copyright 2009-2018 Acme Coorp]")
     }
 
     def "fails on unexpected ml notice content"() {
@@ -120,7 +120,7 @@ Copyright 2009-2018 Acme Coorp"""
         elasticLicense()
         elasticLicense(file("LICENSE.txt"))
         file("NOTICE.txt").text = """Elasticsearch
-Copyright 2009-2018 Elasticsearch"""
+Copyright 2009-2021 Elasticsearch"""
 
         file("ml/NOTICE.txt").text = "Boost Software License - Version 1.0 - August 17th, 2003"
         file('darwin-tar/build.gradle') << """
