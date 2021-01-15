@@ -36,8 +36,7 @@ subprojects {
     additionalLicense 'ELAST', 'Elastic License', 'Licensed under the Elastic License'
   }
 
-  ext.licenseName = 'Elastic License'
-  ext.licenseUrl = ext.elasticLicenseUrl
+  ext.projectLicenses = ['Elastic License': ext.elasticLicenseUrl]
 
   project.ext.licenseFile = rootProject.file('licenses/ELASTIC-LICENSE.txt')
   project.ext.noticeFile = xpackRootProject.file('NOTICE.txt')

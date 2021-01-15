@@ -41,7 +41,7 @@ class LicenseHeadersPrecommitPluginFuncTest extends AbstractGradleFuncTest {
 
         then:
         result.task(":licenseHeaders").outcome == TaskOutcome.FAILED
-        assertOutputContains(result.output, "> License header problems were found! Full details: ./build/reports/licenseHeaders/rat.xml")
+        assertOutputContains(result.output, "> Check failed. License header problems were found. Full details: ./build/reports/licenseHeaders/rat.xml")
         assertOutputContains(result.output, "./src/main/java/org/acme/UnknownLicensed.java")
         assertOutputContains(result.output, "./src/main/java/org/acme/UnapprovedLicensed.java")
         normalized(result.output).contains("./src/main/java/org/acme/ApacheLicensed.java") == false
