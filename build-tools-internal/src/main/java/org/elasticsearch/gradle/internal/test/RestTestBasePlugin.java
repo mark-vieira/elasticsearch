@@ -45,7 +45,8 @@ public class RestTestBasePlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-        project.getPluginManager().apply(ElasticsearchJavaBasePlugin.class);
+        // TODO: This is just to get transitive dependencies temporarily
+        project.getPluginManager().apply(JavaBasePlugin.class);
         project.getPluginManager().apply(ElasticsearchTestBasePlugin.class);
         project.getPluginManager().apply(InternalTestClustersPlugin.class);
         project.getTasks().withType(RestIntegTestTask.class).configureEach(restIntegTestTask -> {

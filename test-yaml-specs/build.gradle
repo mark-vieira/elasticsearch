@@ -1,0 +1,18 @@
+import org.elasticsearch.gradle.Version
+import org.elasticsearch.gradle.internal.test.RestIntegTestTask
+
+apply plugin: 'elasticsearch.standalone-rest-test'
+
+dependencies {
+  testImplementation project(':test:junit5-yaml-rest-runner')
+  testImplementation 'org.junit.platform:junit-platform-suite:1.8.2'
+}
+
+tasks.register("test", RestIntegTestTask) {
+  useJUnitPlatform()
+}
+
+testClusters.configureEach {
+  module ':modules:mapper-extras'
+  requiresFeature 'es.index_mode_feature_flag_registered', Version.fromString("8.0.0")
+}

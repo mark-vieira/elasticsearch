@@ -53,21 +53,25 @@ public class ErrorReportingTestListener implements TestOutputListener, TestListe
 
     @Override
     public void onOutput(TestDescriptor testDescriptor, TestOutputEvent outputEvent) {
-        TestDescriptor suite = testDescriptor.getParent();
+        TestDescriptor suite = findParentClassDescriptor(testDescriptor, testDescriptor.getClassName());
 
         // Check if this is output from the test suite itself (e.g. afterTest or beforeTest)
-        if (testDescriptor.isComposite()) {
+        if (testDescriptor.isComposite()
+            && testDescriptor.getClassName() != null
+            && testDescriptor.getClassName().equals(testDescriptor.getName())) {
             suite = testDescriptor;
         }
 
-        // Hold on to any repro messages so we can report them immediately on test case failure
-        if (outputEvent.getMessage().startsWith(REPRODUCE_WITH_PREFIX)) {
-            Deque<String> lines = reproductionLines.computeIfAbsent(Descriptor.of(suite), d -> new LinkedList<>());
-            lines.add(outputEvent.getMessage());
-        }
+        if (suite != null) {
+            // Hold on to any repro messages so we can report them immediately on test case failure
+            if (outputEvent.getMessage().startsWith(REPRODUCE_WITH_PREFIX)) {
+                Deque<String> lines = reproductionLines.computeIfAbsent(Descriptor.of(suite), d -> new LinkedList<>());
+                lines.add(outputEvent.getMessage());
+            }
 
-        EventWriter eventWriter = eventWriters.computeIfAbsent(Descriptor.of(suite), EventWriter::new);
-        eventWriter.write(outputEvent);
+            EventWriter eventWriter = eventWriters.computeIfAbsent(Descriptor.of(suite), EventWriter::new);
+            eventWriter.write(outputEvent);
+        }
     }
 
     @Override
@@ -155,7 +159,10 @@ public class ErrorReportingTestListener implements TestOutputListener, TestListe
                 // include test failure exception stacktraces in test suite output log
                 if (result.getExceptions().size() > 0) {
                     String message = formatter.format(testDescriptor, result.getExceptions()).substring(4);
-                    EventWriter eventWriter = eventWriters.computeIfAbsent(Descriptor.of(testDescriptor.getParent()), EventWriter::new);
+                    EventWriter eventWriter = eventWriters.computeIfAbsent(
+                        Descriptor.of(findParentClassDescriptor(testDescriptor, testDescriptor.getClassName())),
+                        EventWriter::new
+                    );
 
                     eventWriter.write(new TestOutputEvent() {
                         @Override
@@ -191,6 +198,17 @@ public class ErrorReportingTestListener implements TestOutputListener, TestListe
 
         public String getFullName() {
             return className + "." + name;
+        }
+    }
+
+    private TestDescriptor findParentClassDescriptor(TestDescriptor testDescriptor, String className) {
+        TestDescriptor parent = testDescriptor.getParent();
+        if (parent == null) {
+            return null;
+        } else if (parent.getName().equals(className)) {
+            return parent;
+        } else {
+            return findParentClassDescriptor(parent, className);
         }
     }
 

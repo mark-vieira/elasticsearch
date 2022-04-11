@@ -1,0 +1,10 @@
+apply plugin: 'java-library'
+
+dependencies {
+  implementation project(':libs:elasticsearch-x-content')
+  implementation project(':client:rest')
+  implementation project(':client:sniffer')
+  implementation "org.hamcrest:hamcrest:${versions.hamcrest}"
+  implementation 'org.junit.jupiter:junit-jupiter-api:5.8.2' // Needed for intellij to detect test suites
+  api 'org.junit.platform:junit-platform-engine:1.8.2'
+}

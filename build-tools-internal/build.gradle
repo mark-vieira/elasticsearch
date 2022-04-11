@@ -240,6 +240,7 @@ dependencies {
   api 'org.ow2.asm:asm-tree:9.2'
   api "org.apache.httpcomponents:httpclient:${versions.getProperty('httpclient')}"
   api "org.apache.httpcomponents:httpcore:${versions.getProperty('httpcore')}"
+  api 'org.junit.platform:junit-platform-launcher:1.8.2'
   compileOnly "com.puppycrawl.tools:checkstyle:${versions.getProperty('checkstyle')}"
   runtimeOnly "org.elasticsearch.gradle:reaper:$version"
   testImplementation "com.puppycrawl.tools:checkstyle:${versions.getProperty('checkstyle')}"
