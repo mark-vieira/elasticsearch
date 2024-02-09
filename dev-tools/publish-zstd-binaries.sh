@@ -89,7 +89,7 @@ echo 'Building Windows jar...'
 WINDOWS_X86_JAR=$(build_windows_jar)
 
 upload_artifact() {
-  curl -sS -X PUT -H "X-JFrog-Art-Api: ${ARTIFACTORY_API_KEY}" --location "${ARTIFACTORY_REPOSITORY}/org/elasticsearch/zstd/${VERSION}/$(basename $1)" | jq -r '.downloadUri'
+  curl -sS -X PUT -H "X-JFrog-Art-Api: ${ARTIFACTORY_API_KEY}" --data-binary "@$1" --location "${ARTIFACTORY_REPOSITORY}/org/elasticsearch/zstd/${VERSION}/$(basename $1)"
 }
 
 echo 'Uploading artifacts...'
