@@ -10,6 +10,7 @@
 package org.elasticsearch.plugin.discovery.gce;
 
 import org.apache.lucene.util.SetOnce;
+import org.elasticsearch.TransportVersion;
 import org.elasticsearch.cloud.gce.GceInstancesService;
 import org.elasticsearch.cloud.gce.GceInstancesServiceImpl;
 import org.elasticsearch.cloud.gce.GceMetadataService;
@@ -37,6 +38,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class GceDiscoveryPlugin extends Plugin implements DiscoveryPlugin, Closeable {
+    public static final TransportVersion SOME_NEW_TV = TransportVersion.fromName("some-new-tv");
 
     /** Determines whether settings those reroutes GCE call should be allowed (for testing purposes only). */
     private static final boolean ALLOW_REROUTE_GCE_SETTINGS = Booleans.parseBoolean(
