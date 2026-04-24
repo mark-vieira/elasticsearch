@@ -335,6 +335,7 @@ public final class LookupQueryOperator implements Operator {
         );
 
         private static final TransportVersion ESQL_STREAMING_LOOKUP_JOIN = TransportVersion.fromName("esql_streaming_lookup_join");
+        private static final TransportVersion ESQL_LOOKUP_OPERATOR_STATUS = TransportVersion.fromName("esql_lookup_operator_status");
 
         private final int pagesReceived;
         private final int pagesEmitted;
@@ -426,7 +427,16 @@ public final class LookupQueryOperator implements Operator {
 
         @Override
         public TransportVersion getMinimalSupportedVersion() {
-            return ESQL_STREAMING_LOOKUP_JOIN;
+            return ESQL_LOOKUP_OPERATOR_STATUS;
+        }
+
+        @Override
+        public boolean supportsVersion(TransportVersion version) {
+            // We have to override this due to a mistake in versioning. This previously deployed ot production using
+            // TransportVersion.current() isntead of a distinct transport version. To fix this going forward, yet still support existing
+            // production projects with this code, we need to support both the new (correct) minimum supported version and the old one.
+            // Technically, we can remove ESQL_STREAMING_LOOKUP_JOIN here once this lands in production.
+            return version.supports(getMinimalSupportedVersion()) || version == ESQL_STREAMING_LOOKUP_JOIN;
         }
     }
 }
